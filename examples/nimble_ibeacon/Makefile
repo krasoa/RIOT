@@ -1,5 +1,5 @@
 # name of your application
-APPLICATION = nimble_gatt
+APPLICATION = nimble_ibeacon
 
 # If no BOARD is found in the environment, use this default:
 BOARD ?= nrf52dk
@@ -10,7 +10,6 @@ RIOTBASE ?= $(CURDIR)/../..
 # Include NimBLE
 USEPKG += nimble
 USEMODULE += nimble_svc_gap
-USEMODULE += nimble_svc_gatt
 
 # We also use the AD part of the BLE helper module
 USEMODULE += bluetil_ad

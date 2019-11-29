@@ -33,13 +33,13 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "nimble_riot.h"
 #include "net/bluetil/ad.h"
 
 #include "host/ble_gap.h"
+
+#include "net/gnrc/netif/mac.h"
 
 static const char *device_name = "NimBLE on RIOT";
 
@@ -66,6 +66,7 @@ static void start_advertise(void);
 
 static void start_advertise(void)
 {
+
     struct ble_gap_adv_params advp;
     int rc;
 
@@ -88,6 +89,8 @@ static void start_advertise(void)
 int main(void)
 {
     puts("NimBLE Beacon");
+    printf("Test\n");
+    printf("MAC Address: %s\n", NET_GNRC_NETIF_MAC_H);
 
     /* configure and set the advertising data */
     uint8_t buf[BLE_HS_ADV_MAX_SZ];
