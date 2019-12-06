@@ -764,8 +764,10 @@ INPUT                  = ../../doc.txt \
                          src/mainpage.md \
                          src/creating-modules.md \
                          src/creating-an-application.md \
+                         src/driver-guide.md \
                          src/getting-started.md \
                          ../../tests/README.md \
+                         src/build-system-basics.md \
                          src/advanced-build-system-tricks.md \
                          src/changelog.md \
                          ../../LOSTANDFOUND.md
