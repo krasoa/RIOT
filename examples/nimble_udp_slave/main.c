@@ -21,10 +21,12 @@
 #include <stdio.h>
 #include <inttypes.h>
 
+
 #include "msg.h"
 #include "net/sock/udp.h"
 #include "xtimer.h"
-
+#include "nimble_autoconn.h"
+#define NIMBLE_AUTOCONN_CONN_ITVL (1000U)
 
 #define UDP_DEFAULT_PORT 8888 /* Default UDP port */
 
@@ -46,11 +48,17 @@ int spam_master(sock_udp_t sock, sock_udp_ep_t remote) {
             }
         }
         xtimer_sleep(1);
+        // xtimer_ticks32_t ticks = xtimer_ticks_from_usec(1000000);
+        // xtimer_spin(ticks);
     }
 }
 
 int main(void)
 {
+    puts("Nimble 'Send 3 UDP Packets every Second' Application");
+
+    
+
     ssize_t res;
 
     /* Create socket */
@@ -66,20 +74,10 @@ int main(void)
     /* Bind remote socket by receiving a packet from it */
     if ((res = sock_udp_recv(&sock, buf, sizeof(buf), SOCK_NO_TIMEOUT, &remote)) >= 0) {
         puts("Received a message, starting SPAM_MASTER!");
+        nimble_autoconn_disable();
             
         spam_master(sock, remote);
 
-    /* Spam the master by sending 3 Packets in an interval of 1s */
-        // while (1) {
-        //     for (int i = 0; i < 3; i++) {
-        //         if ((res = sock_udp_send(&sock, buf, sizeof(buf), &remote) < 0)) {
-        //             puts("Error sending message");
-        //             sock_udp_close(&sock);
-        //             return 1;
-        //         }
-        //     }
-        //     xtimer_sleep(1);
-        // }
     } else {
         puts("Error receiving message");
     }

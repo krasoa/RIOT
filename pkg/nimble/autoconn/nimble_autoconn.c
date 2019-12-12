@@ -31,7 +31,7 @@
 #include "host/ble_hs.h"
 #include "nimble/nimble_port.h"
 
-#define ENABLE_DEBUG    (0)
+#define ENABLE_DEBUG    (1)
 #include "debug.h"
 
 #if defined(MODULE_NIMBLE_AUTOCONN_IPSP)
@@ -283,9 +283,12 @@ int nimble_autoconn_update(const nimble_autoconn_params_t *params,
 void nimble_autoconn_enable(void)
 {
     DEBUG("[autoconn] ACTIVE\n");
+    // if (nimble_netif_conn_count(NIMBLE_NETIF_UNUSED) > 2) {
     if (nimble_netif_conn_count(NIMBLE_NETIF_UNUSED) > 0) {
         _state = STATE_ADV;
         _on_state_change(NULL);
+    } else {
+        nimble_autoconn_disable();
     }
 }
 

@@ -1,5 +1,5 @@
 # name of your application
-APPLICATION = nimble_udp_slave
+APPLICATION = gnrc_networking
 
 # If no BOARD is found in the environment, use this default:
 BOARD ?= nrf52dk
@@ -9,20 +9,36 @@ RIOTBASE ?= $(CURDIR)/../..
 
 # Include packages that pull up and auto-init the link layer.
 # NOTE: 6LoWPAN will be included if IEEE802.15.4 devices are present
+# USEMODULE += nimble_autoconn_ipsp
 USEMODULE += gnrc_netdev_default
 USEMODULE += auto_init_gnrc_netif
+# Activate ICMPv6 error messages
+USEMODULE += gnrc_icmpv6_error
 # Specify the mandatory networking modules for IPv6 and UDP
-USEMODULE += gnrc_ipv6_default
+USEMODULE += gnrc_ipv6_router_default
+USEMODULE += gnrc_udp
 USEMODULE += gnrc_sock_udp
+# Add a routing protocol
+USEMODULE += gnrc_rpl
+USEMODULE += auto_init_gnrc_rpl
+# This application dumps received packets to STDIO using the pktdump module
+USEMODULE += gnrc_pktdump
+# Additional networking modules that can be dropped if not needed
+# USEMODULE += gnrc_icmpv6_echo
+# Add also the shell, some shell commands
+USEMODULE += shell
+USEMODULE += shell_commands
+# USEMODULE += ps
+# USEMODULE += netstats_l2
+# USEMODULE += netstats_ipv6
+# USEMODULE += netstats_rpl
 
-USEMODULE += nimble_autoconn_ipsp
+
 # Comment this out to disable code in RIOT that does safety checking
 # which is not needed in a production environment but helps in the
 # development process:
 DEVELHELP ?= 1
-
-AUTOCONN_CONN_ITVL ?= '(1000U)'
-CFLAGS += -DNIMBLE_AUTOCONN_CONN_ITVL=$(AUTOCONN_CONN_ITVL)
+DEBUG ?= 1
 
 # Uncomment the following 2 lines to specify static link lokal IPv6 address
 # this might be useful for testing, in cases where you cannot or do not want to

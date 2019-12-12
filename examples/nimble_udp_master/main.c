@@ -22,30 +22,28 @@
 
 #include "shell.h"
 #include "msg.h"
-#include "xtimer.h"
+#include "net/sock/udp.h"
 
-#define MAIN_QUEUE_SIZE     (8)
-static msg_t _main_msg_queue[MAIN_QUEUE_SIZE];
+#define ENABLE_DEBUG (1)
+#include "debug.h"
 
-extern int udp_cmd(int argc, char **argv);
+#define UDP_DEFAULT_PORT 8888 /* Default UDP port */
 
-static const shell_command_t shell_commands[] = {
-    { "udp", "send data over UDP and listen on UDP ports", udp_cmd },
-    { NULL, NULL, NULL }
-};
+typedef struct {
+    sock_udp_t *sock;
+    sock_udp_ep_t *remote;
+} remote_peer_t;
 
 int main(void)
 {
-    xtimer_sleep(1);
     /* we need a message queue for the thread running the shell in order to
      * receive potentially fast incoming networking packets */
     msg_init_queue(_main_msg_queue, MAIN_QUEUE_SIZE);
     puts("RIOT network stack example application");
 
-    /* start shell */
-    puts("All up, running the shell now");
-    char line_buf[SHELL_DEFAULT_BUFSIZE];
-    shell_run(shell_commands, line_buf, SHELL_DEFAULT_BUFSIZE);
+    sock_udp_t udp_socket;
+    sock_udp_ep_t local = SOCK_IPV6_EP_ANY;
+    sock_udp_ep_t remote = SOCK_IPV6_EP_ANY;
 
     /* should be never reached */
     return 0;
