@@ -19,15 +19,18 @@
  * @}
  */
 
-// #include "msg.h"
+// #include <stdio.h>
+// #include <stdlib.h>
+
+// #include "fmt.h"
 #include "net/sock/udp.h"
+#include "fmt.h"
 #include "xtimer.h"
-// #include "nimble_riot.h"
+#include "nimble_riot.h"
 #include "nimble_netif.h"
-// #include "nimble_netif_conn.h"
-// #include "net/ble.h"
+#include "nimble_netif_conn.h"
 #include "net/bluetil/ad.h"
-// #include "net/bluetil/addr.h"
+#include "net/bluetil/addr.h"
 
 
 #define UDP_DEFAULT_PORT 8888 /* Default UDP port */
