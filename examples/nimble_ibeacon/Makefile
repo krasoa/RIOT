@@ -1,5 +1,5 @@
 # name of your application
-APPLICATION = nimble_ibeacon
+APPLICATION = nimble_beacon
 
 # If no BOARD is found in the environment, use this default:
 BOARD ?= nrf52dk
@@ -10,6 +10,7 @@ RIOTBASE ?= $(CURDIR)/../..
 # Include NimBLE
 USEPKG += nimble
 USEMODULE += nimble_svc_gap
+USEMODULE += nimble_autoconn_ipsp
 
 # We also use the AD part of the BLE helper module
 USEMODULE += bluetil_ad
