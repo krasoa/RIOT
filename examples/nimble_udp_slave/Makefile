@@ -19,7 +19,14 @@ USEMODULE += nimble_autoconn_ipsp
 # Comment this out to disable code in RIOT that does safety checking
 # which is not needed in a production environment but helps in the
 # development process:
-DEVELHELP ?= 1
+DEVELHELP ?= 0
+
+CFLAGS += -DNDEBUG -DLOG_LEVEL=LOG_NONE
+
+# DISABLE_MODULE += auto_init
+# DISABLE_MODULE += test_utils_interactive_sync
+
+USEMODULE += stdio_null
 
 AUTOCONN_CONN_ITVL ?= '(1000U)'
 CFLAGS += -DNIMBLE_AUTOCONN_CONN_ITVL=$(AUTOCONN_CONN_ITVL)
@@ -40,4 +47,4 @@ QUIET ?= 1
 include $(RIOTBASE)/Makefile.include
 
 # Set a custom channel if needed
-include $(RIOTMAKE)/default-radio-settings.inc.mk
+# include $(RIOTMAKE)/default-radio-settings.inc.mk

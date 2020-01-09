@@ -39,7 +39,7 @@
 #include "host/ble_gap.h"
 #include "host/util/util.h"
 
-#define ENABLE_DEBUG            (1)
+#define ENABLE_DEBUG            (0)
 #include "debug.h"
 
 #ifdef MODULE_GNRC_SIXLOWPAN
