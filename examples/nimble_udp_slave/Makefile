@@ -1,5 +1,5 @@
 # name of your application
-APPLICATION = gnrc_networking
+APPLICATION = nimble_udp_slave
 
 # If no BOARD is found in the environment, use this default:
 BOARD ?= nrf52dk
