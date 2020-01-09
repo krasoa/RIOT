@@ -47,26 +47,18 @@ static uint8_t _buf[20];
 
 static void start_advertise(void)
 {
-    // for (int i = 0; i < 20; i++) {
-    //     _buf[i] = (uint8_t) 41;
-    // }
-    // memset
     memset(_buf, 0, sizeof(_buf));
 
     struct ble_gap_adv_params advp;
     int rc;
 
     memset(&advp, 0, sizeof(advp));
-    /* set mode to non-connectionable, generally discoverable */
+    /* set mode to non-connectionable, non-discoverable*/
     advp.conn_mode = BLE_GAP_CONN_MODE_NON;
     advp.disc_mode = BLE_GAP_DISC_MODE_NON;
     /* connection interval 1s+-5ms */
-    // advp.itvl_min  = 1555;
     advp.itvl_min = MS_TO_ADV_ITVL(995);
-    // advp.itvl_max  = 1605;
     advp.itvl_max = MS_TO_ADV_ITVL(1005);
-    // rc = ble_gap_adv_start(nimble_riot_own_addr_type, NULL, BLE_HS_FOREVER,
-    //                        &advp, gap_event_cb, NULL);
     rc = ble_gap_adv_set_data(_buf, sizeof(_buf));
     rc = ble_gap_adv_start(nimble_riot_own_addr_type, NULL, BLE_HS_FOREVER,
                            &advp, NULL, NULL);
