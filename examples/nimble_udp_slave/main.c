@@ -18,7 +18,6 @@
  * @}
  */
 
-#include <stdio.h>
 #include <inttypes.h>
 
 #include "msg.h"
@@ -28,19 +27,20 @@
 
 #define UDP_DEFAULT_PORT 8888 /* Default UDP port */
 
-uint8_t buf[20]; /* We send 20 Byte of payload */
+static uint8_t _buf[20]; /* We send 20 Byte of payload */
 
 int spam_master(sock_udp_t sock, sock_udp_ep_t remote) {
     ssize_t res;
 
-    for (int i = 0; i < 20; i++) {
-        buf[i] = (uint8_t) 41;
-    }
+    // for (int i = 0; i < 20; i++) {
+    //     _buf[i] = (uint8_t) 41;
+    // }
+
+    memset(_buf,0,sizeof(_buf));
 
     while (1) {
         for (int i = 0; i < 3; i++) {
-            if ((res = sock_udp_send(&sock, &buf, sizeof(buf), &remote) < 0)) {
-                puts("Error sending message");
+            if ((res = sock_udp_send(&sock, &_buf, sizeof(_buf), &remote) < 0)) {
                 sock_udp_close(&sock);
                 return 1;
             }
@@ -59,27 +59,14 @@ int main(void)
     sock_udp_ep_t remote = SOCK_IPV6_EP_ANY;
     local.port = UDP_DEFAULT_PORT;
     if (sock_udp_create(&sock, &local, NULL, 0) < 0) {
-        puts("Error creating UDP socket");
         return 1;
     }
 
     /* Bind remote socket by receiving a packet from it */
-    if ((res = sock_udp_recv(&sock, buf, sizeof(buf), SOCK_NO_TIMEOUT, &remote)) >= 0) {
-        puts("Received a message, starting SPAM_MASTER!");
+    if ((res = sock_udp_recv(&sock, _buf, sizeof(_buf), SOCK_NO_TIMEOUT, &remote)) >= 0) {
             
         spam_master(sock, remote);
 
-    /* Spam the master by sending 3 Packets in an interval of 1s */
-        // while (1) {
-        //     for (int i = 0; i < 3; i++) {
-        //         if ((res = sock_udp_send(&sock, buf, sizeof(buf), &remote) < 0)) {
-        //             puts("Error sending message");
-        //             sock_udp_close(&sock);
-        //             return 1;
-        //         }
-        //     }
-        //     xtimer_sleep(1);
-        // }
     } else {
         puts("Error receiving message");
     }
