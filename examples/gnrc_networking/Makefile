@@ -2,13 +2,14 @@
 APPLICATION = gnrc_networking
 
 # If no BOARD is found in the environment, use this default:
-BOARD ?= native
+BOARD ?= nrf52dk
 
 # This has to be the absolute path to the RIOT base directory:
 RIOTBASE ?= $(CURDIR)/../..
 
 # Include packages that pull up and auto-init the link layer.
 # NOTE: 6LoWPAN will be included if IEEE802.15.4 devices are present
+# USEMODULE += nimble_autoconn_ipsp
 USEMODULE += gnrc_netdev_default
 USEMODULE += auto_init_gnrc_netif
 # Activate ICMPv6 error messages
@@ -31,10 +32,12 @@ USEMODULE += netstats_l2
 USEMODULE += netstats_ipv6
 USEMODULE += netstats_rpl
 
+
 # Comment this out to disable code in RIOT that does safety checking
 # which is not needed in a production environment but helps in the
 # development process:
 DEVELHELP ?= 1
+DEBUG ?= 1
 
 # Uncomment the following 2 lines to specify static link lokal IPv6 address
 # this might be useful for testing, in cases where you cannot or do not want to

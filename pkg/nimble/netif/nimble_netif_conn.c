@@ -49,6 +49,7 @@ void nimble_netif_conn_init(void)
 
 nimble_netif_conn_t *nimble_netif_conn_get(int handle)
 {
+    DEBUG("nimble_netif_conn_get\n");
     if ((handle < 0) || (handle >= CONN_CNT)) {
         return NULL;
     }

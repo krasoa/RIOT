@@ -20,10 +20,12 @@
 
 #include <inttypes.h>
 
+
 #include "msg.h"
 #include "net/sock/udp.h"
 #include "xtimer.h"
-
+#include "nimble_autoconn.h"
+#define NIMBLE_AUTOCONN_CONN_ITVL (1000U)
 
 #define UDP_DEFAULT_PORT 8888 /* Default UDP port */
 
@@ -46,11 +48,17 @@ int spam_master(sock_udp_t sock, sock_udp_ep_t remote) {
             }
         }
         xtimer_sleep(1);
+        // xtimer_ticks32_t ticks = xtimer_ticks_from_usec(1000000);
+        // xtimer_spin(ticks);
     }
 }
 
 int main(void)
 {
+    puts("Nimble 'Send 3 UDP Packets every Second' Application");
+
+    
+
     ssize_t res;
 
     /* Create socket */

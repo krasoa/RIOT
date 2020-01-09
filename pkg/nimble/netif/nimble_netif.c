@@ -81,6 +81,7 @@ static struct os_mbuf_pool _mbuf_pool;
 /* notify the user about state changes for a connection context */
 static void _notify(int handle, nimble_netif_event_t event, uint8_t *addr)
 {
+    DEBUG("nimble_netif.c: _notify\n");
     if (_eventcb) {
         _eventcb(handle, event, addr);
     }
@@ -88,6 +89,7 @@ static void _notify(int handle, nimble_netif_event_t event, uint8_t *addr)
 
 static void _netif_init(gnrc_netif_t *netif)
 {
+    DEBUG("nimble_netif.c: _netif_init\n");
     (void)netif;
 
     gnrc_netif_default_init(netif);
@@ -103,6 +105,7 @@ static void _netif_init(gnrc_netif_t *netif)
 
 static int _send_pkt(nimble_netif_conn_t *conn, gnrc_pktsnip_t *pkt)
 {
+    DEBUG("nimble_netif.c: _send_pkt\n");
     int res;
     int num_bytes = 0;
 
@@ -144,6 +147,7 @@ static int _send_pkt(nimble_netif_conn_t *conn, gnrc_pktsnip_t *pkt)
 static int _netif_send_iter(nimble_netif_conn_t *conn,
                             int handle, void *arg)
 {
+    DEBUG("nimble_netif.c: _netif_send_iter\n");
     (void)handle;
     _send_pkt(conn, (gnrc_pktsnip_t *)arg);
     return 0;
@@ -151,6 +155,7 @@ static int _netif_send_iter(nimble_netif_conn_t *conn,
 
 static int _netif_send(gnrc_netif_t *netif, gnrc_pktsnip_t *pkt)
 {
+    DEBUG("nimble_netif.c: _netif_send\n");
     assert(pkt->type == GNRC_NETTYPE_NETIF);
 
     (void)netif;
@@ -180,6 +185,7 @@ static int _netif_send(gnrc_netif_t *netif, gnrc_pktsnip_t *pkt)
 /* not used, we pass incoming data to GNRC directly from the NimBLE thread */
 static gnrc_pktsnip_t *_netif_recv(gnrc_netif_t *netif)
 {
+    DEBUG("nimble_netif.c: _netif_recv\n");
     (void)netif;
     return NULL;
 }
@@ -195,6 +201,7 @@ static const gnrc_netif_ops_t _nimble_netif_ops = {
 
 static inline int _netdev_init(netdev_t *dev)
 {
+    DEBUG("nimble_netif.c: _netdev_init\n");
     _nimble_netif = dev->context;
 
     /* get our own address from the controller */
@@ -210,6 +217,7 @@ static inline int _netdev_init(netdev_t *dev)
 static inline int _netdev_get(netdev_t *dev, netopt_t opt,
                               void *value, size_t max_len)
 {
+    DEBUG("nimble_netif.c: _netdev_get\n");
     (void)dev;
     int res = -ENOTSUP;
 
@@ -250,6 +258,7 @@ static inline int _netdev_get(netdev_t *dev, netopt_t opt,
 static inline int _netdev_set(netdev_t *dev, netopt_t opt,
                               const void *value, size_t val_len)
 {
+    DEBUG("nimble_netif.c: _netdev_set\n");
     (void)dev;
     int res = -ENOTSUP;
 
@@ -281,6 +290,7 @@ static netdev_t _nimble_netdev_dummy = {
 
 static void _on_data(nimble_netif_conn_t *conn, struct ble_l2cap_event *event)
 {
+    DEBUG("nimble_netif.c: _on_data\n");
     struct os_mbuf *rxb = event->receive.sdu_rx;
     size_t rx_len = (size_t)OS_MBUF_PKTLEN(rxb);
 
@@ -327,6 +337,7 @@ end:
 
 static int _on_l2cap_client_evt(struct ble_l2cap_event *event, void *arg)
 {
+    DEBUG("nimble_netif.c: _on_l2cap_client_evt\n");
     int handle = (int)arg;
     nimble_netif_conn_t *conn = nimble_netif_conn_get(handle);
     assert(conn && (conn->state & NIMBLE_NETIF_GAP_MASTER));
@@ -362,6 +373,7 @@ static int _on_l2cap_client_evt(struct ble_l2cap_event *event, void *arg)
 
 static int _on_l2cap_server_evt(struct ble_l2cap_event *event, void *arg)
 {
+    DEBUG("nimble_netif.c: _on_l2cap_server_evt\n");
     (void)arg;
     int handle;
     nimble_netif_conn_t *conn;
@@ -406,6 +418,7 @@ static int _on_l2cap_server_evt(struct ble_l2cap_event *event, void *arg)
 
 static void _on_gap_connected(nimble_netif_conn_t *conn, uint16_t conn_handle)
 {
+    DEBUG("nimble_netif.c: _on_gap_connected\n");
     struct ble_gap_conn_desc desc;
     int res = ble_gap_conn_find(conn_handle, &desc);
     assert(res == 0);
@@ -417,6 +430,7 @@ static void _on_gap_connected(nimble_netif_conn_t *conn, uint16_t conn_handle)
 
 static int _on_gap_master_evt(struct ble_gap_event *event, void *arg)
 {
+    DEBUG("nimble_netif.c: _on_gap_master_evt\n");
     int res = 0;
     int handle = (int)arg;
     nimble_netif_conn_t *conn = nimble_netif_conn_get(handle);
@@ -465,6 +479,7 @@ static int _on_gap_master_evt(struct ble_gap_event *event, void *arg)
 
 static int _on_gap_slave_evt(struct ble_gap_event *event, void *arg)
 {
+    DEBUG("nimble_netif.c: _on_gap_slave_evt\n");
     int handle = (int)arg;
     nimble_netif_conn_t *conn = nimble_netif_conn_get(handle);
     assert(conn);
@@ -503,6 +518,7 @@ static int _on_gap_slave_evt(struct ble_gap_event *event, void *arg)
 
 void nimble_netif_init(void)
 {
+    DEBUG("nimble_netif.c: nimble_netif_init");
     int res;
     (void)res;
 
@@ -526,35 +542,45 @@ void nimble_netif_init(void)
 
 void nimble_netif_eventcb(nimble_netif_eventcb_t cb)
 {
+    DEBUG("nimble_netif.c: nimble_netif_eventcb\n");
     _eventcb = cb;
+    DEBUG("nimble_netif.c: In nimble_netif_eventcb");
 }
 
 int nimble_netif_connect(const ble_addr_t *addr,
                          const struct ble_gap_conn_params *conn_params,
                          uint32_t timeout)
 {
+    DEBUG("nimble_netif.c: nimble_netif.c Addr assertion:\n");
     assert(addr);
+    DEBUG("nimble_netif.c eventcb assertion\n");
     assert(_eventcb);
+    DEBUG("nimble_netic.c Assertions\n");
 
     /* the netif_conn module expects addresses in network byte order */
     uint8_t addrn[BLE_ADDR_LEN];
     bluetil_addr_swapped_cp(addr->val, addrn);
+    DEBUG("nimble_netif.c: bluetils_add_swapped_cp\n");
 
     /* check that there is no open connection with the given address */
     if (nimble_netif_conn_connected(addrn) ||
         nimble_netif_conn_connecting()) {
         return NIMBLE_NETIF_BUSY;
     }
+    DEBUG("nimble_netif.c: nimble_netif_conn_connected\n");
 
     /* get empty connection context */
     int handle = nimble_netif_conn_start_connection(addrn);
     if (handle == NIMBLE_NETIF_CONN_INVALID) {
         return NIMBLE_NETIF_NOMEM;
     }
+    DEBUG("nimble_netif.c: nimble_netif_conn_start_connection\n");
 
     int res = ble_gap_connect(nimble_riot_own_addr_type, addr, timeout,
                               conn_params, _on_gap_master_evt, (void *)handle);
+    DEBUG("nimble_netif.c assert res==0\n");
     assert(res == 0);
+    DEBUG("nimble_netif.c assert res==0 alles cool\n");
     (void)res;
 
     return handle;
@@ -562,6 +588,7 @@ int nimble_netif_connect(const ble_addr_t *addr,
 
 int nimble_netif_close(int handle)
 {
+    DEBUG("nimble_netif.c: nimble_netif_close\n");
     nimble_netif_conn_t *conn = nimble_netif_conn_get(handle);
     if (conn == NULL) {
         return NIMBLE_NETIF_NOTFOUND;
@@ -581,6 +608,7 @@ int nimble_netif_close(int handle)
 int nimble_netif_accept(const uint8_t *ad, size_t ad_len,
                         const struct ble_gap_adv_params *adv_params)
 {
+    DEBUG("nimble_netif.c: nimble_netif_accept\n");
     assert(ad);
     assert(adv_params);
 
@@ -607,6 +635,7 @@ int nimble_netif_accept(const uint8_t *ad, size_t ad_len,
 
 int nimble_netif_accept_stop(void)
 {
+    DEBUG("nimble_netif.c: nimble_netif_accept_stop\n");
     int handle = nimble_netif_conn_get_adv();
     if (handle == NIMBLE_NETIF_CONN_INVALID) {
         return NIMBLE_NETIF_NOTADV;
@@ -623,6 +652,7 @@ int nimble_netif_accept_stop(void)
 int nimble_netif_update(int handle,
                         const struct ble_gap_upd_params *conn_params)
 {
+    DEBUG("nimble_netif.c: nimble_netif_update\n");
     nimble_netif_conn_t *conn = nimble_netif_conn_get(handle);
     if (conn == NULL) {
         return NIMBLE_NETIF_NOTCONN;

@@ -1,0 +1,45 @@
+# name of your application
+APPLICATION = gnrc_networking
+
+# If no BOARD is found in the environment, use this default:
+BOARD ?= nrf52dk
+
+# This has to be the absolute path to the RIOT base directory:
+RIOTBASE ?= $(CURDIR)/../..
+
+# Include packages that pull up and auto-init the link layer.
+# NOTE: 6LoWPAN will be included if IEEE802.15.4 devices are present
+# USEMODULE += nimble_autoconn_ipsp
+USEMODULE += gnrc_netdev_default
+USEMODULE += auto_init_gnrc_netif
+USEMODULE += gnrc_ipv6_router_default
+USEMODULE += gnrc_udp
+USEMODULE += gnrc_sock_udp
+# Add also the shell, some shell commands
+# USEMODULE += shell
+# USEMODULE += shell_commands
+
+
+# Comment this out to disable code in RIOT that does safety checking
+# which is not needed in a production environment but helps in the
+# development process:
+DEVELHELP ?= 1
+DEBUG ?= 1
+
+# Uncomment the following 2 lines to specify static link lokal IPv6 address
+# this might be useful for testing, in cases where you cannot or do not want to
+# run a shell with ifconfig to get the real link lokal address.
+IPV6_STATIC_LLADDR ?= '"fe80::cafe:cafe:cafe:1"'
+CFLAGS += -DGNRC_IPV6_STATIC_LLADDR=$(IPV6_STATIC_LLADDR)
+
+# Uncomment this to join RPL DODAGs even if DIOs do not contain
+# DODAG Configuration Options (see the doc for more info)
+# CFLAGS += -DGNRC_RPL_DODAG_CONF_OPTIONAL_ON_JOIN
+
+# Change this to 0 show compiler invocation lines by default:
+QUIET ?= 1
+
+include $(RIOTBASE)/Makefile.include
+
+# Set a custom channel if needed
+include $(RIOTMAKE)/default-radio-settings.inc.mk
