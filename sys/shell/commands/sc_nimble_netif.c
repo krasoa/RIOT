@@ -34,9 +34,11 @@
 #include "nimble_scanner.h"
 #endif
 
+#define ENABLE_DEBUG (1)
 #define DEFAULT_NODE_NAME           "bleRIOT"
 #define DEFAULT_SCAN_DURATION       (500U)      /* 500ms */
 #define DEFAULT_CONN_TIMEOUT        (500U)      /* 500ms */
+#define MS_TO_ADV_ITVL(x)    (x * 1000 / BLE_HCI_ADV_ITVL) /* x in ms */
 
 #ifndef MODULE_NIMBLE_AUTOCONN
 static const char *_name_to_connect = NULL;
@@ -193,8 +195,13 @@ static void _cmd_adv(const char *name)
     const struct ble_gap_adv_params _adv_params = {
         .conn_mode = BLE_GAP_CONN_MODE_UND,
         .disc_mode = BLE_GAP_DISC_MODE_LTD,
-        .itvl_min = BLE_GAP_ADV_FAST_INTERVAL2_MIN,
-        .itvl_max = BLE_GAP_ADV_FAST_INTERVAL2_MAX,
+        // .itvl_min = BLE_GAP_ADV_FAST_INTERVAL2_MIN,
+        // .itvl_max = BLE_GAP_ADV_FAST_INTERVAL2_MAX,
+        .itvl_min = MS_TO_ADV_ITVL(100),
+        .itvl_max = MS_TO_ADV_ITVL(100),
+        .channel_map = 0,
+        .filter_policy = 0,
+        .high_duty_cycle = 0,
     };
 
     /* make sure no advertising is in progress */
@@ -336,8 +343,8 @@ static void _cmd_update(int handle, int itvl, int timeout)
     params.itvl_max = (uint16_t)((itvl * 1000) / BLE_HCI_CONN_ITVL);
     params.latency = 0;
     params.supervision_timeout = (uint16_t)(timeout / 10);
-    params.min_ce_len = BLE_GAP_INITIAL_CONN_MIN_CE_LEN;
-    params.max_ce_len = BLE_GAP_INITIAL_CONN_MAX_CE_LEN;
+    // params.min_ce_len = BLE_GAP_INITIAL_CONN_MIN_CE_LEN;
+    // params.max_ce_len = BLE_GAP_INITIAL_CONN_MAX_CE_LEN;
 
     int res = nimble_netif_update(handle, &params);
     if (res != NIMBLE_NETIF_OK) {

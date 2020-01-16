@@ -49,8 +49,7 @@ extern "C" {
 #endif
 
 #ifndef NIMBLE_AUTOCONN_CONN_ITVL
-// #define NIMBLE_AUTOCONN_CONN_ITVL           (75U)           /* 75ms */
-#define NIMBLE_AUTOCONN_CONN_ITVL           (1000U)           /* 75ms */
+#define NIMBLE_AUTOCONN_CONN_ITVL           (75U)           /* 75ms */
 #endif
 #ifndef NIMBLE_AUTOCONN_CONN_LATENCY
 #define NIMBLE_AUTOCONN_CONN_LATENCY        (0)
