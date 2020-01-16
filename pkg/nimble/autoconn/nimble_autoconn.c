@@ -34,6 +34,8 @@
 #define ENABLE_DEBUG    (0)
 #include "debug.h"
 
+#define DEFAULT_CONN_TIMEOUT    (500U)  /* 500ms */
+
 #if defined(MODULE_NIMBLE_AUTOCONN_IPSP)
 #define SVC_FILTER      BLE_GATT_SVC_IPSS
 #elif defined(MODULE_NIMBLE_AUTOCONN_NDNSP)
@@ -156,7 +158,8 @@ static void _on_scan_evt(uint8_t type, const ble_addr_t *addr, int8_t rssi,
         nimble_scanner_stop();
         DEBUG("[autoconn] SCAN success, initiating connection\n");
         _state = STATE_CONN;
-        int res = nimble_netif_connect(addr, &_conn_params, _conn_timeout);
+        int res = nimble_netif_connect(addr, &_conn_params, DEFAULT_CONN_TIMEOUT);
+        // int res = nimble_netif_connect(addr, NULL, DEFAULT_CONN_TIMEOUT);
         assert(res >= 0);
         (void)res;
     }
