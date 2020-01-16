@@ -30,6 +30,7 @@ USEMODULE += stdio_null
 
 AUTOCONN_CONN_ITVL ?= '(1000U)'
 CFLAGS += -DNIMBLE_AUTOCONN_CONN_ITVL=$(AUTOCONN_CONN_ITVL)
+CFLAGS += -DNIMBLE_NETIF_MAX_CONN=1
 
 # Uncomment the following 2 lines to specify static link lokal IPv6 address
 # this might be useful for testing, in cases where you cannot or do not want to

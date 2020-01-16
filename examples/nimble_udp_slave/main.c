@@ -21,11 +21,10 @@
 #include <inttypes.h>
 
 
-#include "msg.h"
 #include "net/sock/udp.h"
 #include "xtimer.h"
 #include "nimble_autoconn.h"
-#define NIMBLE_AUTOCONN_CONN_ITVL (1000U)
+//#define NIMBLE_AUTOCONN_CONN_ITVL (1000U)
 
 #define UDP_DEFAULT_PORT 8888 /* Default UDP port */
 
@@ -33,10 +32,6 @@ static uint8_t _buf[20]; /* We send 20 Byte of payload */
 
 int spam_master(sock_udp_t sock, sock_udp_ep_t remote) {
     ssize_t res;
-
-    // for (int i = 0; i < 20; i++) {
-    //     _buf[i] = (uint8_t) 41;
-    // }
 
     memset(_buf,0,sizeof(_buf));
 
@@ -48,17 +43,11 @@ int spam_master(sock_udp_t sock, sock_udp_ep_t remote) {
             }
         }
         xtimer_sleep(1);
-        // xtimer_ticks32_t ticks = xtimer_ticks_from_usec(1000000);
-        // xtimer_spin(ticks);
     }
 }
 
 int main(void)
 {
-    puts("Nimble 'Send 3 UDP Packets every Second' Application");
-
-    
-
     ssize_t res;
 
     /* Create socket */
@@ -72,13 +61,8 @@ int main(void)
 
     /* Bind remote socket by receiving a packet from it */
     if ((res = sock_udp_recv(&sock, _buf, sizeof(_buf), SOCK_NO_TIMEOUT, &remote)) >= 0) {
-            
         spam_master(sock, remote);
-
-    } else {
-        puts("Error receiving message");
     }
-
 
     /* should be never reached */
     return 0;

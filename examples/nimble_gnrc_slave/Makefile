@@ -47,6 +47,8 @@ DEVELHELP ?= 1
 # DODAG Configuration Options (see the doc for more info)
 # CFLAGS += -DGNRC_RPL_DODAG_CONF_OPTIONAL_ON_JOIN
 
+CFLAGS += -DNIMBLE_NETIF_MAX_CONN=1
+
 # Change this to 0 show compiler invocation lines by default:
 QUIET ?= 1
 

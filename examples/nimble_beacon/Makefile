@@ -10,7 +10,7 @@ RIOTBASE ?= $(CURDIR)/../..
 # Include NimBLE
 USEPKG += nimble
 USEMODULE += nimble_svc_gap
-USEMODULE += nimble_autoconn_ipsp
+#USEMODULE += nimble_autoconn_ipsp
 
 # We also use the AD part of the BLE helper module
 USEMODULE += bluetil_ad

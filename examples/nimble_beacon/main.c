@@ -41,7 +41,7 @@
 
 #define MS_TO_ADV_ITVL(x)    (x * 1000 / BLE_HCI_ADV_ITVL)
 
-static const char *_device_name = "NimBLE on RIOT";
+static const char *_device_name = "nimble beacon";
 
 static uint8_t _buf[20];
 
