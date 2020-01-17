@@ -136,20 +136,25 @@ static void _on_scan_evt(uint8_t type, const ble_addr_t *addr, int8_t rssi,
 
     if (_filter_uuid(&ad) && !nimble_netif_conn_connected(addrn)) {
         nimble_autoconn_disable();
+        DEBUG("[autoconn] SCAN success, initiating connection\n");
         _state = STATE_CONN;
         int res = nimble_netif_connect(addr, &_conn_params, DEFAULT_CONN_TIMEOUT);
         // int res = nimble_netif_connect(addr, NULL, DEFAULT_CONN_TIMEOUT);
         assert(res >= 0);
         (void)res;
-        DEBUG("[autoconn] SCAN success, initiating connection\n");
     }
 }
 
 static void _evt_dbg(const char *msg, int handle, const uint8_t *addr)
 {
 #if ENABLE_DEBUG
-    printf("%s (%i|", msg, handle);
-    bluetil_addr_print(addr);
+    printf("[autoconn] %s (%i|", msg, handle);
+    if (addr) {
+        bluetil_addr_print(addr);
+    }
+    else {
+        printf("n/a");
+    }
     puts(")");
 #else
     (void)msg;
@@ -164,27 +169,41 @@ static void _on_netif_evt(int handle, nimble_netif_event_t event,
     int en = 1;
 
     switch (event) {
+        case NIMBLE_NETIF_ACCEPTING:
+            en = 0;
+            break;
+        case NIMBLE_NETIF_INIT_MASTER:
+            _evt_dbg("CONN_INIT master", handle, addr);
+            en = 0;
+            break;
+        case NIMBLE_NETIF_INIT_SLAVE:
+            _evt_dbg("CONN_INIT slave", handle, addr);
+            en = 0;
+            break;
         case NIMBLE_NETIF_CONNECTED_MASTER:
-            _evt_dbg("[autoconn] CONNECTED master", handle, addr);
+            _evt_dbg("CONNECTED master", handle, addr);
             assert(_state == STATE_CONN);
             _state = STATE_IDLE;
             break;
         case NIMBLE_NETIF_CONNECTED_SLAVE:
-            _evt_dbg("[autoconn] CONNECTED slave", handle, addr);
+            _evt_dbg("CONNECTED slave", handle, addr);
             break;
         case NIMBLE_NETIF_CLOSED_MASTER:
-            _evt_dbg("[autoconn] CLOSED master", handle, addr);
+            _evt_dbg("CLOSED master", handle, addr);
             break;
         case NIMBLE_NETIF_CLOSED_SLAVE:
-            _evt_dbg("[autoconn] CLOSED slave", handle, addr);
+            _evt_dbg("CLOSED slave", handle, addr);
             break;
-        case NIMBLE_NETIF_CONNECT_ABORT:
-            _evt_dbg("[autoconn] ABORTED", handle, addr);
+        case NIMBLE_NETIF_ABORT_MASTER:
+            _evt_dbg("ABORT master", handle, addr);
             assert(_state == STATE_CONN);
             _state = STATE_IDLE;
             break;
+        case NIMBLE_NETIF_ABORT_SLAVE:
+            _evt_dbg("[autoconn] ABORT slave", handle, addr);
+            break;
         case NIMBLE_NETIF_CONN_UPDATED:
-            _evt_dbg("[autoconn] UPDATED", handle, addr);
+            _evt_dbg("UPDATED", handle, addr);
             en = 0;
             break;
         default:

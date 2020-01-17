@@ -13,6 +13,9 @@ endif
 ifneq (,$(filter posix_semaphore,$(USEMODULE)))
   DIRS += posix/semaphore
 endif
+ifneq (,$(filter dhcpv6,$(USEMODULE)))
+  DIRS += net/application_layer/dhcpv6
+endif
 ifneq (,$(filter posix_sockets,$(USEMODULE)))
   DIRS += posix/sockets
 endif
@@ -111,6 +114,9 @@ ifneq (,$(filter asymcute,$(USEMODULE)))
 endif
 ifneq (,$(filter emcute,$(USEMODULE)))
   DIRS += net/application_layer/emcute
+endif
+ifneq (,$(filter sock_async_event,$(USEMODULE)))
+  DIRS += net/sock/async/event
 endif
 ifneq (,$(filter sock_util,$(USEMODULE)))
   DIRS += net/sock

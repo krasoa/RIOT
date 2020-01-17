@@ -18,6 +18,7 @@
  * @}
  */
 
+#include <assert.h>
 #include <string.h>
 #include "byteorder.h"
 #include "periph/spi.h"
@@ -85,6 +86,7 @@ static void _ili9341_set_area(ili9341_t *dev, uint16_t x1, uint16_t x2,
 
 int ili9341_init(ili9341_t *dev, const ili9341_params_t *params)
 {
+    assert(params->lines >= 16 && params->lines <= 320 && !(params->lines & 0x7));
     dev->params = params;
     uint8_t command_params[4] = { 0 };
     gpio_init(dev->params->dcx_pin, GPIO_OUT);
@@ -127,7 +129,8 @@ int ili9341_init(ili9341_t *dev, const ili9341_params_t *params)
     _write_cmd(dev, ILI9341_CMD_VMCTRL2, command_params, 1);
 
     /* Memory access CTL */
-    command_params[0] = ILI9341_MADCTL_HORZ_FLIP | ILI9341_MADCTL_BGR;
+    command_params[0] = ILI9341_MADCTL_HORZ_FLIP;
+    command_params[0] |= dev->params->rgb ? 0 : ILI9341_MADCTL_BGR;
     _write_cmd(dev, ILI9341_CMD_MADCTL, command_params, 1);
 
     /* Frame control */
@@ -138,9 +141,9 @@ int ili9341_init(ili9341_t *dev, const ili9341_params_t *params)
     /* Display function control */
     command_params[0] = 0x08;
     command_params[1] = 0x82;
-    command_params[2] = 0x27; /* 320 lines */
+    /* number of lines, see datasheet p. 166 (DISCTRL::NL) */
+    command_params[2] = (params->lines >> 3) - 1;
     _write_cmd(dev, ILI9341_CMD_DFUNC, command_params, 3);
-
 
     /* Pixel format */
     command_params[0] = 0x55; /* 16 bit mode */
@@ -193,6 +196,10 @@ int ili9341_init(ili9341_t *dev, const ili9341_params_t *params)
         _write_cmd(dev, ILI9341_CMD_NGAMCTRL, gamma_neg,
                    sizeof(gamma_neg));
 
+    }
+
+    if (dev->params->inverted) {
+        _write_cmd(dev, ILI9341_CMD_DINVON, NULL, 0);
     }
     /* Sleep out (turn off sleep mode) */
     _write_cmd(dev, ILI9341_CMD_SLPOUT, NULL, 0);
@@ -290,12 +297,18 @@ void ili9341_pixmap(ili9341_t *dev, uint16_t x1, uint16_t x2,
 
 void ili9341_invert_on(ili9341_t *dev)
 {
-    ili9341_write_cmd(dev, ILI9341_CMD_DINVON, NULL, 0);
+    uint8_t command = (dev->params->inverted) ? ILI9341_CMD_DINVOFF
+                                              : ILI9341_CMD_DINVON;
+
+    ili9341_write_cmd(dev, command, NULL, 0);
 }
 
 void ili9341_invert_off(ili9341_t *dev)
 {
-    ili9341_write_cmd(dev, ILI9341_CMD_DINVOFF, NULL, 0);
+    uint8_t command = (dev->params->inverted) ? ILI9341_CMD_DINVON
+                                              : ILI9341_CMD_DINVOFF;
+
+    ili9341_write_cmd(dev, command, NULL, 0);
 }
 
 void ili9341_set_brightness(ili9341_t *dev, uint8_t brightness)

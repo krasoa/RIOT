@@ -388,6 +388,9 @@ extern "C" {
  *
  * Accommodates writing Content-Format option in gcoap_finish(). May set to
  * zero if function not used.
+ *
+ * @deprecated  Will not be available after the 2020.07 release. Used only by
+ * gcoap_finish(), which also is deprecated.
  */
 #ifndef GCOAP_REQ_OPTIONS_BUF
 #define GCOAP_REQ_OPTIONS_BUF   (4)
@@ -398,6 +401,9 @@ extern "C" {
  *
  * Accommodates writing Content-Format option in gcoap_finish(). May set to
  * zero if function not used.
+ *
+ * @deprecated  Will not be available after the 2020.07 release. Used only by
+ * gcoap_finish(), which also is deprecated.
  */
 #ifndef GCOAP_RESP_OPTIONS_BUF
 #define GCOAP_RESP_OPTIONS_BUF  (4)
@@ -408,6 +414,9 @@ extern "C" {
  *
  * Accommodates writing Content-Format option in gcoap_finish(). May set to
  * zero if function not used.
+ *
+ * @deprecated  Will not be available after the 2020.07 release. Used only by
+ * gcoap_finish(), which also is deprecated.
  */
 #ifndef GCOAP_OBS_OPTIONS_BUF
 #define GCOAP_OBS_OPTIONS_BUF   (4)
@@ -739,6 +748,9 @@ int gcoap_req_init(coap_pkt_t *pdu, uint8_t *buf, size_t len,
  * Assumes the PDU has been initialized with a gcoap_xxx_init() function, like
  * gcoap_req_init().
  *
+ * @deprecated  Will not be available after the 2020.07 release. Use
+ * coap_opt_finish() instead.
+ *
  * @warning To use this function, you only may have added an Option with
  * option number less than COAP_OPT_CONTENT_FORMAT. Otherwise, use the
  * struct-based API described with @link net_nanocoap nanocoap. @endlink With
@@ -790,29 +802,6 @@ static inline ssize_t gcoap_request(coap_pkt_t *pdu, uint8_t *buf, size_t len,
 size_t gcoap_req_send(const uint8_t *buf, size_t len,
                       const sock_udp_ep_t *remote,
                       gcoap_resp_handler_t resp_handler, void *context);
-
-/**
- * @brief   Sends a buffer containing a CoAP request to the provided endpoint
- *
- * @deprecated  Migration alias for @ref gcoap_req_send(). Will be removed after
- *              the 2020.01 release.
- *
- * @param[in] buf           Buffer containing the PDU
- * @param[in] len           Length of the buffer
- * @param[in] remote        Destination for the packet
- * @param[in] resp_handler  Callback when response received, may be NULL
- * @param[in] context       User defined context passed to the response handler
- *
- * @return  length of the packet
- * @return  0 if cannot send
- */
-static inline size_t gcoap_req_send2(const uint8_t *buf, size_t len,
-                                     const sock_udp_ep_t *remote,
-                                     gcoap_resp_handler_t resp_handler,
-                                     void *context)
-{
-    return gcoap_req_send(buf, len, remote, resp_handler, context);
-}
 
 /**
  * @brief   Initializes a CoAP response packet on a buffer

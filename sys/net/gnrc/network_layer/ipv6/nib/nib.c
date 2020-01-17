@@ -97,6 +97,28 @@ void gnrc_ipv6_nib_init(void)
     _nib_release();
 }
 
+static void _add_static_lladdr(gnrc_netif_t *netif)
+{
+#ifdef GNRC_IPV6_STATIC_LLADDR
+    /* parse addr from string and explicitely set a link lokal prefix
+     * if ifnum > 1 each interface will get its own link local address
+     * with GNRC_IPV6_STATIC_LLADDR + i
+     */
+    char lladdr_str[] = GNRC_IPV6_STATIC_LLADDR;
+    ipv6_addr_t lladdr;
+
+    if(ipv6_addr_from_str(&lladdr, lladdr_str) != NULL) {
+        lladdr.u8[15] += netif->pid;
+        assert(ipv6_addr_is_link_local(&lladdr));
+        gnrc_netif_ipv6_addr_add_internal(
+                netif, &lladdr, 64U, GNRC_NETIF_IPV6_ADDRS_FLAGS_STATE_VALID
+            );
+    }
+#else
+    (void)netif;
+#endif
+}
+
 void gnrc_ipv6_nib_init_iface(gnrc_netif_t *netif)
 {
     assert(netif != NULL);
@@ -123,6 +145,7 @@ void gnrc_ipv6_nib_init_iface(gnrc_netif_t *netif)
         gnrc_netif_release(netif);
         return;
     }
+    _add_static_lladdr(netif);
     _auto_configure_addr(netif, &ipv6_addr_link_local_prefix, 64U);
     if (!(gnrc_netif_is_rtr_adv(netif)) ||
         (gnrc_netif_is_6ln(netif) && !gnrc_netif_is_6lbr(netif))) {
@@ -670,7 +693,7 @@ static void _handle_rtr_adv(gnrc_netif_t *netif, const ipv6_hdr_t *ipv6,
     if ((dr != NULL) && gnrc_netif_is_6ln(netif) &&
         !gnrc_netif_is_6lbr(netif)) {
         /* (register addresses already assigned but not valid yet)*/
-        for (int i = 0; i < GNRC_NETIF_IPV6_ADDRS_NUMOF; i++) {
+        for (int i = 0; i < CONFIG_GNRC_NETIF_IPV6_ADDRS_NUMOF; i++) {
             if ((netif->ipv6.addrs_flags[i] != 0) &&
                 (netif->ipv6.addrs_flags[i] != GNRC_NETIF_IPV6_ADDRS_FLAGS_STATE_VALID)) {
                 _handle_rereg_address(&netif->ipv6.addrs[i]);
@@ -1243,7 +1266,7 @@ static void _handle_pfx_timeout(_nib_offl_entry_t *pfx)
     gnrc_netif_acquire(netif);
     if (now >= pfx->valid_until) {
         evtimer_del(&_nib_evtimer, &pfx->pfx_timeout.event);
-        for (int i = 0; i < GNRC_NETIF_IPV6_ADDRS_NUMOF; i++) {
+        for (int i = 0; i < CONFIG_GNRC_NETIF_IPV6_ADDRS_NUMOF; i++) {
             if (ipv6_addr_match_prefix(&netif->ipv6.addrs[i],
                                        &pfx->pfx) >= pfx->pfx_len) {
                 gnrc_netif_ipv6_addr_remove_internal(netif,
@@ -1254,7 +1277,7 @@ static void _handle_pfx_timeout(_nib_offl_entry_t *pfx)
         _nib_offl_clear(pfx);
     }
     else if (now >= pfx->pref_until) {
-        for (int i = 0; i < GNRC_NETIF_IPV6_ADDRS_NUMOF; i++) {
+        for (int i = 0; i < CONFIG_GNRC_NETIF_IPV6_ADDRS_NUMOF; i++) {
             if (ipv6_addr_match_prefix(&netif->ipv6.addrs[i],
                                        &pfx->pfx) >= pfx->pfx_len) {
                 netif->ipv6.addrs_flags[i] &= ~GNRC_NETIF_IPV6_ADDRS_FLAGS_STATE_MASK;
