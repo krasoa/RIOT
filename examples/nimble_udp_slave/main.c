@@ -22,10 +22,12 @@
 
 
 #include "net/sock/udp.h"
+#include "nimble_netif.h"
 #include "xtimer.h"
 #include "nimble_autoconn.h"
-//#define NIMBLE_AUTOCONN_CONN_ITVL (1000U)
+#define NIMBLE_AUTOCONN_CONN_ITVL (1000U)
 
+#define MS_TO_CONN_ITVL(x)      (x * 1000 / BLE_HCI_CONN_ITVL) /* x in ms */
 #define UDP_DEFAULT_PORT 8888 /* Default UDP port */
 
 static uint8_t _buf[20]; /* We send 20 Byte of payload */
@@ -48,6 +50,14 @@ int spam_master(sock_udp_t sock, sock_udp_ep_t remote) {
 
 int main(void)
 {
+    const struct ble_gap_upd_params _conn_params = {
+    .itvl_min = MS_TO_CONN_ITVL(5000),
+    .itvl_max = MS_TO_CONN_ITVL(5000),
+    .latency = 0,
+    .supervision_timeout = (500),
+    .min_ce_len = 1,
+    .max_ce_len = 1,
+    };
     ssize_t res;
 
     /* Create socket */
@@ -61,6 +71,7 @@ int main(void)
 
     /* Bind remote socket by receiving a packet from it */
     if ((res = sock_udp_recv(&sock, _buf, sizeof(_buf), SOCK_NO_TIMEOUT, &remote)) >= 0) {
+        nimble_netif_update(0, &_conn_params);
         spam_master(sock, remote);
     }
 
