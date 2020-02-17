@@ -98,6 +98,13 @@ static const shell_command_t shell_commands[] = {
 int main(void)
 {
     xtimer_sleep(1);
+    if (CoreDebug->DHCSR % 2 == 1) {
+        printf("DHCSR: %lx\n", *(uint32_t *) 0xE000EDF0);
+        printf("DHCSR: %lx\n", *(uint32_t *) 0xE000EDF0);
+        LED0_ON;
+    } else {
+        LED0_OFF;
+    }
     /* we need a message queue for the thread running the shell in order to
      * receive potentially fast incoming networking packets */
     msg_init_queue(_main_msg_queue, MAIN_QUEUE_SIZE);
