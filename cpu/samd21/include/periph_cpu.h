@@ -32,7 +32,7 @@ extern "C" {
  * @brief   Override the default initial PM blocker
  * @todo   Idle modes are enabled by default, deep sleep mode blocked
  */
-#define PM_BLOCKER_INITIAL  { .val_u32 = 0x00000001 }
+#define PM_BLOCKER_INITIAL      0x00000001
 
 /**
  * @name   SAMD21 sleep modes for PM
@@ -42,6 +42,18 @@ extern "C" {
 #define SAMD21_PM_IDLE_2        (1U)    /**< Idle 2 (stops AHB, APB and CPU) */
 #define SAMD21_PM_IDLE_1        (2U)    /**< Idle 1 (stops AHB and CPU)      */
 #define SAMD21_PM_IDLE_0        (3U)    /**< Idle 0 (stops CPU)              */
+/** @} */
+
+/**
+ * @name   SAMD21 GCLK definitions
+ * @{
+ */
+enum {
+    SAM0_GCLK_MAIN = 0,                 /**< 48 MHz main clock      */
+    SAM0_GCLK_1MHZ,                     /**< 1 MHz clock for xTimer */
+    SAM0_GCLK_32KHZ,                    /**< 32 kHz clock           */
+    SAM0_GCLK_1KHZ,                     /**< 1 kHz clock            */
+};
 /** @} */
 
 /**

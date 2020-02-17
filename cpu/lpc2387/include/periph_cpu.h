@@ -111,6 +111,19 @@ typedef struct {
 } uart_conf_t;
 
 /**
+ * @brief   SPI device configuration
+ */
+typedef struct {
+    lpc23xx_spi_t *dev;         /**< pointer to the SPI device */
+    uint8_t pinsel_mosi;        /**< PINSEL# of the MOSI pin   */
+    uint8_t pinsel_miso;        /**< PINSEL# of the MISO pin   */
+    uint8_t pinsel_clk;         /**< PINSEL# of the CLK pin    */
+    uint32_t pinsel_msk_mosi;   /**< MOSI PINSEL Mask          */
+    uint32_t pinsel_msk_miso;   /**< MISO PINSEL Mask          */
+    uint32_t pinsel_msk_clk;    /**< CLK PINSEL Mask           */
+} spi_conf_t;
+
+/**
  * @brief   Number of available timer channels
  */
 #define TIMER_CHAN_NUMOF        (4U)
@@ -152,6 +165,35 @@ typedef enum {
  * - line 0 (ch0): P0.26
  */
 #define DAC_NUMOF           (1U)
+
+/**
+ * @brief   Possible ADC resolution settings
+ * @{
+ */
+#define HAVE_ADC_RES_T
+typedef enum {
+    ADC_RES_16BIT = 0xff,   /**< not applicable         */
+    ADC_RES_14BIT = 0xfe,   /**< not applicable         */
+    ADC_RES_12BIT = 0xfd,   /**< not applicable         */
+    ADC_RES_10BIT = 0b000,  /**< ADC resolution: 10 bit */
+    ADC_RES_9BIT  = 0b001,  /**< ADC resolution:  9 bit */
+    ADC_RES_8BIT  = 0b010,  /**< ADC resolution:  8 bit */
+    ADC_RES_7BIT  = 0b011,  /**< ADC resolution:  7 bit */
+    ADC_RES_6BIT  = 0b100,  /**< ADC resolution:  6 bit */
+    ADC_RES_5BIT  = 0b101,  /**< ADC resolution:  5 bit */
+    ADC_RES_4BIT  = 0b110,  /**< ADC resolution:  4 bit */
+    ADC_RES_3BIT  = 0b111,  /**< ADC resolution:  3 bit */
+} adc_res_t;
+/** @} */
+
+/**
+ * @brief   ADC device configuration
+ */
+typedef struct {
+    uint8_t  chan;          /**< which ADC to use (0…7)  */
+    uint8_t  pinsel;        /**< PINSEL# of the ADC pin  */
+    uint32_t pinsel_msk;    /**< PINSEL Mask for ADC pin */
+} adc_conf_t;
 
 /* @} */
 #ifdef __cplusplus

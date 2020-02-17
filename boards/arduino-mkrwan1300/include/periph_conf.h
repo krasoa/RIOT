@@ -48,7 +48,7 @@ static const uart_conf_t uart_config[] = {
         .rx_pad   = UART_PAD_RX_3,
         .tx_pad   = UART_PAD_TX_2,
         .flags    = UART_FLAG_NONE,
-        .gclk_src = GCLK_CLKCTRL_GEN_GCLK0
+        .gclk_src = SAM0_GCLK_MAIN,
     },
     { /* LoRa module */
         .dev      = &SERCOM4->USART,
@@ -62,7 +62,7 @@ static const uart_conf_t uart_config[] = {
         .rx_pad   = UART_PAD_RX_3,
         .tx_pad   = UART_PAD_TX_0,
         .flags    = UART_FLAG_NONE,
-        .gclk_src = GCLK_CLKCTRL_GEN_GCLK0
+        .gclk_src = SAM0_GCLK_MAIN,
     },
 };
 
@@ -70,7 +70,7 @@ static const uart_conf_t uart_config[] = {
 #define UART_0_ISR          isr_sercom5
 #define UART_1_ISR          isr_sercom4
 
-#define UART_NUMOF          (sizeof(uart_config) / sizeof(uart_config[0]))
+#define UART_NUMOF          ARRAY_SIZE(uart_config)
 /** @} */
 
 /**
@@ -87,11 +87,12 @@ static const spi_conf_t spi_config[] = {
         .mosi_mux = GPIO_MUX_C,
         .clk_mux  = GPIO_MUX_C,
         .miso_pad = SPI_PAD_MISO_3,
-        .mosi_pad = SPI_PAD_MOSI_0_SCK_1
+        .mosi_pad = SPI_PAD_MOSI_0_SCK_1,
+        .gclk_src = SAM0_GCLK_MAIN,
     }
 };
 
-#define SPI_NUMOF           (sizeof(spi_config) / sizeof(spi_config[0]))
+#define SPI_NUMOF           ARRAY_SIZE(spi_config)
 /** @} */
 
 #ifdef __cplusplus

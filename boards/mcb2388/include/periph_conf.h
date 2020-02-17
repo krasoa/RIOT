@@ -71,12 +71,36 @@ static const uart_conf_t uart_config[] = {
 
 /**
  * @name    SPI configuration
- *
- * The SPI implementation is very much fixed, so we don't need to configure
- * anything besides the mandatory SPI_NUMOF.
  * @{
  */
+static const spi_conf_t spi_config[] = {
+    {
+        .dev = SPI0,
+        .pinsel_mosi = 3,
+        .pinsel_miso = 3,
+        .pinsel_clk  = 3,
+        .pinsel_msk_mosi = (BIT16 | BIT17), /* P1.24 */
+        .pinsel_msk_miso = (BIT14 | BIT15), /* P1.23 */
+        .pinsel_msk_clk  = (BIT8  | BIT9),  /* P1.20 */
+    },
+};
+
 #define SPI_NUMOF           (1)
+/** @} */
+
+/**
+ * @name ADC configuration
+ * @{
+ */
+static const adc_conf_t adc_config[] = {
+    {
+        .chan       = 0,
+        .pinsel     = 1,
+        .pinsel_msk = BIT14,
+    },
+};
+
+#define ADC_NUMOF           (1)
 /** @} */
 
 #ifdef __cplusplus

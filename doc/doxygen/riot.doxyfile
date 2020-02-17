@@ -764,13 +764,14 @@ INPUT                  = ../../doc.txt \
                          src/mainpage.md \
                          src/creating-modules.md \
                          src/creating-an-application.md \
+                         src/porting-boards.md \
                          src/driver-guide.md \
                          src/getting-started.md \
                          ../../tests/README.md \
                          src/build-system-basics.md \
+                         src/kconfig/kconfig.md \
                          src/advanced-build-system-tricks.md \
                          src/changelog.md \
-                         src/kconfig/kconfig.md \
                          ../../LOSTANDFOUND.md
 
 # This tag can be used to specify the character encoding of the source files
