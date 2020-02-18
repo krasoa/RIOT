@@ -59,8 +59,6 @@ int main(void)
     // .max_ce_len = 1,
     // };
      if (CoreDebug->DHCSR % 2 == 1) {
-        printf("DHCSR: %lx\n", *(uint32_t *) 0xE000EDF0);
-        printf("DHCSR: %lx\n", *(uint32_t *) 0xE000EDF0);
         LED0_ON;
     } else {
         LED0_OFF;
