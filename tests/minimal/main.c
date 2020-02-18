@@ -17,8 +17,12 @@
  *
  * @}
  */
-
+#include <vendor/nrf52.h>
 int main(void)
 {
+    int i;
+    for (i = 0; i < 9; i++) {
+        NRF_POWER->RAM[i].POWER = NRF_POWER->RAM[i].POWER & 0xFFFFFFFC; 
+    }
     return 0;
 }

@@ -19,11 +19,9 @@
  * @}
  */
 
-#include <vendor/nrf52.h>
+// #include <vendor/nrf52.h>
 
 int main(void)
 {
-    NRF_POWER->SYSTEMOFF=1;
-
     return 0;
 }
