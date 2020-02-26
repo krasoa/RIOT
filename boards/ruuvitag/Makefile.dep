@@ -5,7 +5,7 @@ ifneq (,$(filter saul_default,$(USEMODULE)))
 endif
 
 # Use Segger's RTT by default for stdio on this board
-DEFAULT_MODULE += stdio_rtt
+#DEFAULT_MODULE += stdio_rtt
 
 USEMODULE += boards_common_nrf52xxdk
 
