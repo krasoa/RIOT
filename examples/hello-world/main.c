@@ -23,6 +23,6 @@
 
 int main(void)
 {
-    NRF_POWER->DCDCEN = 1;
+    NRF_POWER->SYSTEMOFF = 1;
     return 0;
 }
