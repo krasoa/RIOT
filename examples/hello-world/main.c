@@ -19,7 +19,10 @@
  * @}
  */
 
+#include <vendor/nrf52.h>
+
 int main(void)
 {
+    NRF_POWER->DCDCEN = 1;
     return 0;
 }
