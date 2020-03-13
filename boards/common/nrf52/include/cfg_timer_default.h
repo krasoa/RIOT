@@ -32,9 +32,15 @@ extern "C" {
  */
 static const timer_conf_t timer_config[] = {
     {
+        .dev      = NRF_TIMER0,
+        .channels = 3,
+        .bitmode  = TIMER_BITMODE_BITMODE_08Bit,
+        .irqn     = TIMER0_IRQn
+    },
+    {
         .dev      = NRF_TIMER1,
         .channels = 3,
-        .bitmode  = TIMER_BITMODE_BITMODE_32Bit,
+        .bitmode  = TIMER_BITMODE_BITMODE_08Bit,
         .irqn     = TIMER1_IRQn
     },
     {
@@ -42,11 +48,26 @@ static const timer_conf_t timer_config[] = {
         .channels = 3,
         .bitmode  = TIMER_BITMODE_BITMODE_08Bit,
         .irqn     = TIMER2_IRQn
+    },
+    {
+        .dev      = NRF_TIMER3,
+        .channels = 3,
+        .bitmode  = TIMER_BITMODE_BITMODE_08Bit,
+        .irqn     = TIMER3_IRQn
+    },
+    {
+        .dev      = NRF_TIMER4,
+        .channels = 3,
+        .bitmode  = TIMER_BITMODE_BITMODE_08Bit,
+        .irqn     = TIMER4_IRQn
     }
 };
 
-#define TIMER_0_ISR         isr_timer1
-#define TIMER_1_ISR         isr_timer2
+#define TIMER_0_ISR         isr_timer0
+#define TIMER_1_ISR         isr_timer1
+#define TIMER_2_ISR         isr_timer2
+#define TIMER_3_ISR         isr_timer3
+#define TIMER_4_ISR         isr_timer4
 
 #define TIMER_NUMOF         ARRAY_SIZE(timer_config)
 /** @} */

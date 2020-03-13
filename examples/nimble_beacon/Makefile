@@ -8,6 +8,14 @@ BOARD ?= nrf52dk
 RIOTBASE ?= $(CURDIR)/../..
 
 
+# Include NimBLE
+USEPKG += nimble
+USEMODULE += nimble_svc_gap
+
+# We also use the AD part of the BLE helper module
+USEMODULE += bluetil_ad
+
+# Comment this out to disable code in RIOT that does safety checking
 # which is not needed in a production environment but helps in the
 # development process:
 DEVELHELP ?= 1
@@ -26,57 +34,33 @@ endif
 
 # enable dcdc converter
 ifdef DCDC
-	CFLAGS+=-D_DCDC
+	CFLAGS+=-DDCDC
 endif
 
 # enable number of HFCLK (periph_timer) timers
 ifdef HFCLK_TIMERS
-	CFLAGS+=-D_HFCLK_TIMERS=$(HFCLK_TIMERS)
-	USEMODULE+=periph_timer
+	CFLAGS+=-DHFCLK_TIMERS=$(HFCLK_TIMERS)
 endif
 
 # How often the base clock of 16MHz shall be divided by 2
 ifdef CLK_SHIFT
-	CFLAGS+=-D_CLK_SHIFT=$(CLK_SHIFT)
+	CFLAGS+=-DCLK_SHIFT=$(CLK_SHIFT)
 endif
 
 # enable LFCLK (rtt)
 ifdef RTT
 	USEMODULE += periph_rtt
-	CFLAGS+=-D_RTT
-endif
-
-# NRF_Timer
-ifdef NRF_TIMER
-	CFLAGS+=-D_NRF_TIMER=$(NRF_TIMER)
+	CFLAGS+=-DRTT
 endif
 
 # set advertisement interval manually (default 1000 [=1s])
 ifdef ITVL
-	CFLAGS+=-D_ITVL=$(ITVL)
+	CFLAGS+=-DITVL=$(ITVL)
 endif
 
 # set payload size manually (default 20 [Byte])
 ifdef PAYLOAD_SIZE
-	$(info hello)
-	CFLAGS+=-D_PAYLOAD_SIZE=$(PAYLOAD_SIZE)
-endif
-
-ifdef GPIO_MODE
-CFLAGS+=-D_GPIO_MODE
-ifdef GPIO_OFF
-	CFLAGS+=-D_GPIO_OFF
-else ifdef GPIO_IN
-	CFLAGS+=-D_GPIO_IN
-else ifdef GPIO_OUT
-	CFLAGS+=-D_GPIO_OUT
-endif
-endif
-
-ifdef BUTTON_TIMER
-	USEMODULE+=periph_gpio_irq
-	USEMODULE+=periph_timer
-	CFLAGS+=-D_BUTTON_TIMER
+	CFLAGS+=-DPAYLOAD_SIZE=$(PAYLOAD_SIZE)
 endif
 
 include $(RIOTBASE)/Makefile.include
