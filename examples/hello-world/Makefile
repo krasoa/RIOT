@@ -37,6 +37,9 @@ endif
 
 # How often the base clock of 16MHz shall be divided by 2
 ifdef CLK_SHIFT
+ifndef HFCLK_TIMERS
+	$(error must specify HFCLK_TIMERS to use CLK_SHIFT)
+endif
 	CFLAGS+=-D_CLK_SHIFT=$(CLK_SHIFT)
 endif
 

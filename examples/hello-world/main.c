@@ -37,6 +37,8 @@
     #include "periph/timer.h"
 #endif
 
+// #include "xtimer.h"
+
 #ifdef _BUTTON_TIMER
     static int _timer_state[4] = {0,0,0,0};
 
@@ -55,11 +57,11 @@
             if ((int)arg == 1) {
                 // LED0_ON;
             } else if ((int)arg == 2) {
-                LED1_ON;
+                // LED1_ON;
             } else if ((int)arg == 3) {
-                LED2_ON;
+                // LED2_ON;
             } else if ((int)arg == 4) {
-                LED3_ON;
+                // LED3_ON;
             }
         } else {
             if ((int)arg == 1) {
@@ -77,6 +79,8 @@
 
 int main(void)
 {
+    // xtimer_sleep(2);
+    printf("Hello World!");
     #ifdef _DCDC
         NRF_POWER->DCDCEN = 1;
     #endif
@@ -87,9 +91,9 @@ int main(void)
         printf("Number of timers: %d\n", _HFCLK_TIMERS);
         int j = (int) _HFCLK_TIMERS;
         for (int i = 0; i < j; i++) {
-            printf("Initializing timer %d\n", i);
-            if (timer_init(TIMER_DEV(i), 16000000U >> _CLK_SHIFT, cb, NULL) == 0) {
-                printf("Initialized timer %d\n", i);
+            printf("Initializing timer %d\n", i+1);
+            if (timer_init(TIMER_DEV(i+1), 16000000U >> _CLK_SHIFT, cb, NULL) == 0) {
+                printf("Initialized timer %d\n", i+1);
             } else {
                 printf("Failed to initialize timer %d\n", i);
             }

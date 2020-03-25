@@ -1,0 +1,28 @@
+# loads stdio_null module (disables stdio)
+STDIO_NULL:
+  vals:
+    - 1
+
+# enables DCDC
+DCDC:
+  vals:
+    - 1
+
+HFCLK_TIMERS:
+  vals:
+    - 1
+    - 2
+    - 3
+    - 4
+    
+CLK_SHIFT:
+  vals:
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    - 7
+    - 8
+    - 9
