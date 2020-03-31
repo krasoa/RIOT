@@ -48,13 +48,13 @@ def get_flags(project_path):
     sys.exit(1)
 
 # make (compile) given project with flags
-def make(project_path, flags=[]):
+def make(project_path, flags=[], extra_flags=None):
     # to counter clock skew (see https://stackoverflow.com/questions/18235654/how-to-solve-error-clock-skew-detected)
-    sp.run(["find", project_path, "-exec", "touch", "\\{\\}", "\\",";"])
-    
+    # sp.run(["find", project_path, "-exec", "touch", "\\{\\}", "\\",";"])
+    sp.run(['make', '-C', project_path, 'clean'])
     print(" ".join(['make', '-C', project_path, 'JLINK_SERIAL=000%d' % dut, 
-    "-j%d" % make_threads, 'flash'] + flags))
-    p = sp.run(['make', '-C', project_path] + flags + ['JLINK_SERIAL=000%d' % dut, 
+    "-j%d" % make_threads, 'flash'] + flags + extra_flags))
+    p = sp.run(['make', '-C', project_path] + flags + extra_flags + ['JLINK_SERIAL=000%d' % dut, 
             "-j%d" % make_threads, 'flash'], stdout=open(os.devnull, 'wb'))
     if p.returncode > 0:
         print("%s Failed to compile %s" 
@@ -74,7 +74,7 @@ def measure_avg(out_file,
             duration = 5,
             png = False,
             json = False,
-            sleep_durtaion = 2):
+            sleep_durtaion = 0):
     try:
         ppk_api.disable_dut_power()
         ppk_api.enable_dut_power()
@@ -115,7 +115,7 @@ def measure_and_log(out_dir, subset, flags_with_vals, repetitions=None):
             print("Starting measurement for %s" % outfile)
             avg = measure_avg(outfile, png=png)
             log(out_dir, avg, flags_with_vals)
-            time.sleep(1)
+            # time.sleep(1)
 
 
 def _argparser():
@@ -137,6 +137,8 @@ def _argparser():
                         action="store_true")
     parser.add_argument("-r", "--repetitions", type=int,
                         help="How often a measurement shall be repeated")
+    parser.add_argument("-e", "--extra_make_commands", type=str, nargs='+',
+                        help="Extra commands to add to make process")
     args = parser.parse_args()
     if not args.compile:
         print("%s: error: no project to compile specified (-c)" % THISFILE_PATH)
@@ -162,15 +164,20 @@ if __name__ == "__main__":
 
     project_path = args.compile
     out_dir = args.out_dir
-    png = False
     if args.png:
         png = True
+    else:
+        png = False
     if args.ppk_serial_number:
         ppk = args.ppk_serial_number
     if args.dut_serial_number:
         dut = args.dut_serial_number
     if args.compilation_threads:
         make_threads = args.compilation_threads
+    if not args.extra_make_commands:
+        extra_flags = []
+    else:
+        extra_flags = args.extra_make_commands
     rep = args.repetitions
 
     if not os.path.exists(out_dir):
@@ -202,7 +209,7 @@ if __name__ == "__main__":
             # map flag to corresponding value
             flags_with_vals = ['%s=%d' % (flag, vals[i]) 
                     for i, flag in enumerate(subset)]
-            if make(project_path, flags_with_vals) == 0:
+            if make(project_path, flags_with_vals, extra_flags) == 0:
                 measure_and_log(out_dir, subset, flags_with_vals, repetitions=rep)
             # if max_val for current index reached
             # reset all fields >= index to lowest possible value
@@ -224,6 +231,6 @@ if __name__ == "__main__":
         # also be compiled
         flags_with_vals = ['%s=%d' % (flag, vals[i])
             for i, flag in enumerate(subset)]
-        if make(project_path, flags_with_vals) == 0:
+        if make(project_path, flags_with_vals, extra_flags) == 0:
             measure_and_log(out_dir, subset, flags_with_vals, repetitions=rep)
 
