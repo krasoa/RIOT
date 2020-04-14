@@ -59,13 +59,13 @@
 #define MS_TO_ADV_ITVL(x)    (x * 1000 / BLE_HCI_ADV_ITVL)
 #define F_TIMER              (16000000U)
 
-static const char *_device_name = "nimble beacon";
+//static const char *_device_name = "nimble beacon";
 
 static uint8_t _buf[PAYLOAD_SIZE];
 
 static void start_advertise(void)
 {
-    memset(_buf, 0, sizeof(_buf));
+    memset(_buf, 'a', sizeof(_buf));
 
     struct ble_gap_adv_params advp;
     int rc;
@@ -75,8 +75,10 @@ static void start_advertise(void)
     advp.conn_mode = BLE_GAP_CONN_MODE_NON;
     advp.disc_mode = BLE_GAP_DISC_MODE_NON;
     /* connection interval 1s+-5ms */
-    advp.itvl_min = MS_TO_ADV_ITVL(ITVL - 5);
-    advp.itvl_max = MS_TO_ADV_ITVL(ITVL + 5);
+    advp.itvl_min = MS_TO_ADV_ITVL((1000 - 15));
+    advp.itvl_max = MS_TO_ADV_ITVL((1000 + 15));
+    // advp.itvl_min = 1000 * 1000 / BLE_HCI_ADV_ITVL;
+    // advp.itvl_max = 1000 * 1000 / BLE_HCI_ADV_ITVL;
     rc = ble_gap_adv_set_data(_buf, sizeof(_buf));
     rc = ble_gap_adv_start(nimble_riot_own_addr_type, NULL, BLE_HS_FOREVER,
                            &advp, NULL, NULL);
@@ -124,7 +126,7 @@ int main(void)
     // NRF_CLOCK->TASKS_LFCLKSTOP = 1;
     // NRF_CLOCK->TASKS_LFCLKSTART = 1;
 
-    //  enable LFCLK synthesized from HFCLK (loose 3uA)
+    //  enable LFCLK synthesized from HFCLK (lose 3uA)
     // consumption: 502uA
     // NRF_CLOCK->LFCLKSRC = 2;
     // NRF_CLOCK->TASKS_LFCLKSTOP = 1;
@@ -140,7 +142,7 @@ int main(void)
     uint8_t buf[BLE_HS_ADV_MAX_SZ];
     bluetil_ad_t ad;
     bluetil_ad_init_with_flags(&ad, buf, sizeof(buf), BLUETIL_AD_FLAGS_DEFAULT);
-    bluetil_ad_add_name(&ad, _device_name);
+	//bluetil_ad_add_name(&ad, _device_name);
     ble_gap_adv_set_data(ad.buf, ad.pos);
 
     /* start to advertise this node */

@@ -29,13 +29,14 @@
 #ifdef _GPIO_MODE
     #include "vendor/nrf52.h"
 #endif
-#include "board.h"
+//#include "board.h"
 
 #ifdef _BUTTON_TIMER
     #include "periph/gpio.h"
     #include "periph_conf.h"
     #include "periph/timer.h"
 #endif
+#include <stdio.h>
 
 // #include "xtimer.h"
 
@@ -79,6 +80,26 @@
 
 int main(void)
 {
+    // enable internal oscillator (HFINT instead of crystal oscillator - saves 187uA!)
+    // consumption: 310uA (mit stdio_null 2uA)
+    //NRF_CLOCK->TASKS_HFCLKSTOP=1;
+
+    // enable LFCLK internal RC (slightly higher consumption 0.6 vs 0.25 according to datasheet)
+    //NRF_CLOCK->LFCLKSRC = 0;
+    //NRF_CLOCK->TASKS_LFCLKSTOP = 1;
+    //NRF_CLOCK->TASKS_LFCLKSTART = 1;
+
+    //  enable LFCLK synthesized from HFCLK (lose 3uA)
+    // consumption: 502uA
+    // NRF_CLOCK->LFCLKSRC = 2;
+    // NRF_CLOCK->TASKS_LFCLKSTOP = 1;
+    // NRF_CLOCK->TASKS_LFCLKSTART = 1;
+
+    // disabling UART skyrockets the current consumption to 2,518mA
+    // NRF_UART0->ENABLE = 0;
+    // NRF_UART0->TASKS_STOPRX = 1;
+    // NRF_UART0->TASKS_STOPTX = 1;
+    // NRF_UART0->BAUDRATE = 0x0004F000;
     // xtimer_sleep(2);
     printf("Hello World!");
     #ifdef _DCDC
