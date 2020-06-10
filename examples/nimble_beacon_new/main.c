@@ -89,8 +89,8 @@ static void start_advertise(void)
     memset(&advp, 0, sizeof advp);
     advp.conn_mode = BLE_GAP_CONN_MODE_UND;
     advp.disc_mode = BLE_GAP_DISC_MODE_GEN;
-    advp.itvl_min = MS_TO_ADV_ITVL(10000- 5);
-    advp.itvl_max = MS_TO_ADV_ITVL(10000+ 5);
+    advp.itvl_min = MS_TO_ADV_ITVL(1000- 15);
+    advp.itvl_max = MS_TO_ADV_ITVL(1000+ 5);
     // rc = ble_gap_adv_set_data(buf, sizeof(buf));
     // NRF_CLOCK->TASKS_HFCLKSTOP=1;
     rc = ble_gap_adv_start(nimble_riot_own_addr_type, NULL, BLE_HS_FOREVER,

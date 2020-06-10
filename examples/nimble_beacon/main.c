@@ -119,7 +119,7 @@ int main(void)
 
     // enable internal oscillator (HFINT instead of crystal oscillator - saves 187uA!)
     // consumption: 310uA (mit stdio_null 2uA)
-    NRF_CLOCK->TASKS_HFCLKSTOP=1;
+    // NRF_CLOCK->TASKS_HFCLKSTOP=1;
 
     // enable LFCLK internal RC (slightly higher consumption 0.6 vs 0.25 according to datasheet)
     // NRF_CLOCK->LFCLKSRC = 0;
